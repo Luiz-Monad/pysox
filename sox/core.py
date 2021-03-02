@@ -5,7 +5,6 @@ from pathlib import Path
 from subprocess import CalledProcessError
 from typing import Union, List, Optional, Tuple, Iterable, Any
 
-import numpy as np
 from typing_extensions import Literal
 
 from . import NO_SOX
@@ -24,9 +23,9 @@ EncodingValue = Literal[
 
 
 def sox(args: Iterable[str],
-        src_array: Optional[np.ndarray] = None,
+        src_array: Optional[object] = None,
         decode_out_with_utf: bool = True) -> \
-        Tuple[bool, Optional[Union[str, np.ndarray]], Optional[str]]:
+        Tuple[bool, Optional[Union[str, object]], Optional[str]]:
     '''Pass an argument list to SoX.
 
     Parameters
@@ -75,7 +74,7 @@ def sox(args: Iterable[str],
             err = err.decode("utf-8")
 
             status = process_handle.returncode
-        elif isinstance(src_array, np.ndarray):
+        else:
             process_handle = subprocess.Popen(
                 args,
                 stdin=subprocess.PIPE,
@@ -88,8 +87,6 @@ def sox(args: Iterable[str],
             out, err = process_handle.communicate(src_array.T.tobytes(order='F'))
             err = err.decode("utf-8")
             status = process_handle.returncode
-        else:
-            raise TypeError("src_array must be an np.ndarray!")
 
         return status, out, err
 
