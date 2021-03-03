@@ -1,17 +1,23 @@
 """ Setup script for sox. """
-from setuptools import setup
+from setuptools import setup, find_packages
 
-import imp
+import os
+import re
+import importlib
 
-version = imp.load_source('sox.version', 'sox/version.py')
+def dir(path):
+    return os.path.join(os.path.dirname(__file__), path)
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+def read(fname):
+    return open(dir(fname), "r").read()
+
+def spec(fname):
+    return re.findall( '__version__ = [\'"](.*)["\']', read(fname) )[0]
 
 if __name__ == "__main__":
     setup(
         name='sox',
-        version=version.version,
+        version=spec("sox/version.py"),
         description='Python wrapper around SoX.',
         author='Rachel Bittner',
         author_email='rachel.bittner@nyu.edu',
@@ -19,7 +25,7 @@ if __name__ == "__main__":
         download_url='http://github.com/rabitt/pysox/releases',
         packages=['sox'],
         package_data={'sox': []},
-        long_description=long_description,
+        long_description=read("README.md"),
         long_description_content_type="text/markdown",
         keywords='audio effects SoX',
         license='BSD-3-Clause',
