@@ -2,19 +2,22 @@
 # pre
 Push-Location $PSScriptRoot
 $out = '../sox-build/pysox'
-$build = (New-Item -ItemType Directory $out -Force).FullName
+$channel = (New-Item -ItemType Directory "$out" -Force).FullName
+
+conda index $channel
 
 # build
 
-python setup.py sdist -d $build
+$meta = (Get-Item .).FullName
+conda build $meta --no-test --croot $channel
 
 # install
 
-$egg = ((Get-ChildItem $build)[0].FullName)
-pip install "file://$egg"
+conda install --override-channels --yes -c "file:///$channel" pysox
 
-# Clean
-Remove-Item -Recurse -Force 'sox.egg-info'
+# clean
+
+conda build purge
 
 # done
 Pop-Location
