@@ -19,8 +19,8 @@ if not len(stream_handler.readlines()):
 stream_handler.close()
 
 from . import file_info
-from .combine import Combiner
-from .transform import Transformer
+# from .combine import Combiner
+# from .transform import Transformer
 from .core import SoxError
 from .core import SoxiError
 from .version import version as __version__
